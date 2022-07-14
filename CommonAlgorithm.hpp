@@ -1,23 +1,22 @@
-////////////////////////////////////////////////////////////////////////////////
+ï»¿////////////////////////////////////////////////////////////////////////////////
 //
 // File Name:	CommonAlgorithm.hpp
 // Class Name:	CCommonAlgorithm
-// Description:	Í¨ÓÃ»ù´¡Ëã·¨²Ù×÷£¬°üÀ¨²éÕÒ£¬±éÀúµÈ
-// Author:		ÂŞÖ¾±ò
-// Date:		2018Äê11ÔÂ9ÈÕ16:11:36
+// Description:	é€šç”¨åŸºç¡€ç®—æ³•æ“ä½œï¼ŒåŒ…æ‹¬æŸ¥æ‰¾ï¼Œéå†ç­‰
+// Author:		ç½—å¿—å½¬
+// Date:		2018å¹´11æœˆ9æ—¥
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __COMMON_ALGORITHM_HPP__
-#define __COMMON_ALGORITHM_HPP__
+#ifndef COMMON_ALGORITHM_HPP
+#define COMMON_ALGORITHM_HPP
 
 #pragma once
 
-#include <afxstr.h>
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <comutil.h>
+#include <stdarg.h>
 #include <list>
 #include <functional>
 using namespace std;
@@ -27,66 +26,108 @@ class CCommonAlgorithm
 {
 public:
 
-	// ±ä²ÎÄ£°åº¯Êı  
-	// Ê¹ÓÃfuncCall¶Ô±ä²Î²¿·Ö½øĞĞÖğÒ»´¦Àí
-	// icnt ±ä²Î¸öÊı funcCall »Øµ÷º¯Êı ºóĞøÎª²ÎÊıÕæÖµ
+	// å˜å‚æ¨¡æ¿å‡½æ•°  
+	// ä½¿ç”¨funcCallå¯¹å˜å‚éƒ¨åˆ†è¿›è¡Œé€ä¸€å¤„ç†
+	// icnt å˜å‚ä¸ªæ•° funcCall å›è°ƒå‡½æ•° åç»­ä¸ºå‚æ•°çœŸå€¼
 	template<typename T>
 	static std::vector<int> deal_each( int iCnt, std::function<bool(int iIndex, T& item)> funcCall, ... )
 	{
-		// ³õÊ¼»¯·µ»Ø½á¹¹Ìå
+		// åˆå§‹åŒ–è¿”å›ç»“æ„ä½“
 		std::vector<int> vctRs;
 
-		// ³õÊ¼»¯±ä²ÎÁĞ±í
+		// åˆå§‹åŒ–å˜å‚åˆ—è¡¨
 		va_list ap;
 
-		// ¶¨Î»²ÎÊı
+		// å®šä½å‚æ•°
 		va_start(ap, funcCall);
 
-		// µ÷ÓÃÍ¬ÃûÄ£°å»úĞÍ´¦Àí
+		// è°ƒç”¨åŒåæ¨¡æ¿æœºå‹å¤„ç†
 		vctRs = deal_each<T>(iCnt, funcCall, ap);
-		// ½áÊø±ä²ÎÁĞ±í
+		// ç»“æŸå˜å‚åˆ—è¡¨
 		va_end(ap);
-		// ·µ»Ø½á¹û
+		// è¿”å›ç»“æœ
 		return vctRs;
 	}
 
-	// ±ä²ÎÄ£°åº¯Êı  
-	// Ê¹ÓÃfuncCall¶Ô±ä²Î²¿·Ö½øĞĞÖğÒ»´¦Àí
-	// icnt ±ä²Î¸öÊı funcCall »Øµ÷º¯Êı ºóĞøÎª²ÎÊıÕæÖµ
+	// å˜å‚æ¨¡æ¿å‡½æ•°  
+	// ä½¿ç”¨funcCallå¯¹å˜å‚éƒ¨åˆ†è¿›è¡Œé€ä¸€å¤„ç†
+	// icnt å˜å‚ä¸ªæ•° funcCall å›è°ƒå‡½æ•° åç»­ä¸ºå‚æ•°çœŸå€¼
 	template<typename T>
 	static std::vector<int> deal_each( int iCnt, std::function<bool(int iIndex, T& item)> funcCall, va_list ap )
 	{
 
-		// ³õÊ¼»¯·µ»Ø½á¹¹Ìå
+		// åˆå§‹åŒ–è¿”å›ç»“æ„ä½“
 		std::vector<int> vctRs;
-		// ±éÀú±ä²ÎÁĞ±í
+		// éå†å˜å‚åˆ—è¡¨
 		for( int i=0; i<iCnt; i++ )
 		{
-			// »ñµÃ²ÎÊı
-			T& item = va_arg(ap, T);
-			// µ÷ÓÃ»Øµ÷º¯Êı½øĞĞ´¦Àí
+			// è·å¾—å‚æ•°
+            T item = va_arg(ap, T);
+			// è°ƒç”¨å›è°ƒå‡½æ•°è¿›è¡Œå¤„ç†
 			if( funcCall(i,item) )
-			{// Èç¹û³É¹¦£¬¾Í¼ÆÈëÒ»¸ö0
+			{// å¦‚æœæˆåŠŸï¼Œå°±è®¡å…¥ä¸€ä¸ª0
 				vctRs.push_back(0);
 			}
 			else
-			{//  Èç¹ûÊ§°Ü£¬¼ÆÈë-1×÷Îª´íÎó
+			{//  å¦‚æœå¤±è´¥ï¼Œè®¡å…¥-1ä½œä¸ºé”™è¯¯
 				vctRs.push_back(-1);
 			}
 		}
-		// ·µ»Ø½á¹û
+		// è¿”å›ç»“æœ
 		return vctRs;
 	}
 
-	//ÓÃÀ´½«dwMask ´ÓµÍµ½¸ß µÚiIndex ¸ö¶ş½øÖÆÎ» ÉèÖÃ³ÉÎª bTrue
-	static bool SetBit(DWORD* pdwMask,  int iIndex, bool bTrue)
+
+	template< typename data_type, 
+		template< typename container_data_type, typename al = std::allocator<container_data_type> > class container_type 
+	>
+	static bool deal_each( std::function<container_type<data_type>() > funcGetter,// è·å¾—å®¹å™¨æ•°æ®çš„æ–¹æ³•
+	std::function<bool(data_type)>  funcDeal,// å¤„ç†å®¹å™¨æ•°æ®çš„æ–¹æ³•
+	std::function<bool()> funcBefore = nullptr, // å¤„ç†ä¹‹å‰çš„å‰ç½®å‡½æ•°
+	std::function<bool(container_type<data_type>&)> funcAfter = nullptr) // å¤„ç†ä¹‹åçš„åç½®å‡½æ•°
+	{
+		// å‡½æ•°æŒ‡é’ˆæ˜¯å¦æœ‰æ•ˆ
+		if( !funcGetter || !funcDeal )
+		{
+			return false;
+		}
+
+		// å…ˆå†³å¤„ç†
+		if( funcBefore && !funcBefore() )
+		{
+			return false;
+		}
+
+		bool bIs = true;
+
+		// è·å¾—å®¹å™¨æ•°æ®
+		container_type<data_type> container = funcGetter();
+
+		for(auto it = container.begin(); it!= container.end(); it ++ )
+		{
+			bIs &= funcDeal(*it);
+		}
+
+
+		// åç½®å¤„ç†
+		if( funcAfter && !funcAfter(container) )
+		{
+			return false;
+		}
+
+		return bIs;
+	}
+
+
+	//ç”¨æ¥å°†dwMask ä»ä½åˆ°é«˜ ç¬¬iIndex ä¸ªäºŒè¿›åˆ¶ä½ è®¾ç½®æˆä¸º bTrue
+	static bool SetBit(unsigned int* pdwMask,  int iIndex, bool bTrue)
 	{
 		if( bTrue )
-		{// Èç¹ûÖÃÎªÒ»£¬ ÒÆÎ»Ö®ºó°´Î»»ò
+		{// å¦‚æœç½®ä¸ºä¸€ï¼Œ ç§»ä½ä¹‹åæŒ‰ä½æˆ–
 			*pdwMask |= ( (0x00000001) << iIndex);
 		}
 		else
-		{// Èç¹ûÖÃÎª0£¬ ÒÆÎ»È¡·´Ö®ºó°´Î»Óë
+		{// å¦‚æœç½®ä¸º0ï¼Œ ç§»ä½å–åä¹‹åæŒ‰ä½ä¸
 			*pdwMask &= (~(0x00000001 << iIndex) );
 		}
 		return true;
@@ -94,30 +135,170 @@ public:
 
 
 
-	// ¹¹ÔìÒ»¸öÑÚÂë£¬±ä²ÎÎªÃ¿Ò»Î»ÒªÉèÖÃ³ÉÊ²Ã´, ´ÓÓÒµ½×ó
-	_forceinline static DWORD MakeMask( int iCnt, ... )
+	// æ„é€ ä¸€ä¸ªæ©ç ï¼Œå˜å‚ä¸ºæ¯ä¸€ä½è¦è®¾ç½®æˆä»€ä¹ˆ, ä»å³åˆ°å·¦
+    inline static unsigned int MakeMask( int iCnt, ... )
 	{
 		va_list ap;
 		va_start(ap,iCnt);
-		DWORD dwMask = 0;
+		unsigned int dwMask = 0;
 
-		// ½«SetBitº¯ÊıµÚÒ»¸ö²ÎÊı°ó¶¨µ½dwMask
-		auto funcSetBit = std::bind(&CCommonAlgorithm::SetBit,&dwMask, std::tr1::placeholders::_1,std::tr1::placeholders::_2);
+		// å°†SetBitå‡½æ•°ç¬¬ä¸€ä¸ªå‚æ•°ç»‘å®šåˆ°dwMask
+        auto funcSetBit = std::bind(&CCommonAlgorithm::SetBit,&dwMask, std::placeholders::_1,std::placeholders::_2);
 
-		// µ÷ÓÃÍ¨ÓÃËã·¨½øĞĞ´¦Àí
+		// è°ƒç”¨é€šç”¨ç®—æ³•è¿›è¡Œå¤„ç†
 		CCommonAlgorithm::deal_each<bool>(iCnt, funcSetBit , ap);
 		va_end(ap);
 		return dwMask;
 	}
 
-	// ¼ì²âÑÚÂëµÄÄ³Ò»Î»ÊÇ·ñÎª1
-	_forceinline static bool CheckBit( DWORD dwMask, int iBit )
+	// æ£€æµ‹æ©ç çš„æŸä¸€ä½æ˜¯å¦ä¸º1
+    inline static bool CheckBit( unsigned int dwMask, int iBit )
 	{
 		return !!(dwMask & (0x00000001<<iBit) );
 	}
+
+	// æµ®ç‚¹æ•°ç›¸ç­‰æ¯”è¾ƒ
+    template<typename left_type, typename right_type >
+	static bool IsFloatEqual( left_type l, right_type r )
+	{
+		// æµ®ç‚¹æ•°æœ€å°ç²¾åº¦å·®
+		const double cdMin = 0.00000001;
+		// å¾—åˆ°ä¸¤ä¸ªæ•°çš„å·®å€¼ 
+		double dRs = fabs( l - r );
+		// è¿”å›æ¯”è¾ƒç»“æœ
+		return dRs < cdMin;
+	}
+
+
+    template<	typename data_type,  //ç¬¬ä¸€æ¨¡æ¿å‚æ•°ï¼Œå®¹å™¨çš„æ•°æ®ç±»å‹
+            // ç¬¬äºŒæ¨¡æ¿å‚æ•°ï¼Œä¸€ä¸ªä»¥æ•°æ®ç±»å‹å’Œallocatorä¸ºæ¨¡æ¿çš„å®¹å™¨ï¼Œé€‚é…stlå®¹å™¨ï¼Œï¼Œé»˜è®¤ä½¿ç”¨std::allocator
+            template< typename container_data_type, typename al = std::allocator<container_data_type> >
+                class container_type = std::vector
+        >
+    inline static void clear( container_type<data_type*>& container )
+    {
+        for(auto it = container.begin();
+            it != container.end();
+            it ++ )
+        {
+            if( *it )
+            {
+                delete (*it);
+            }
+        }
+        container.clear();
+    }
+
+    // åˆ¤æ–­å®¹å™¨ä¸­æ˜¯å¦å­˜åœ¨æŒ‡å®šçš„å€¼,éœ€è¦æä¾›æ¯”è¾ƒç®—å­
+    template <typename value_type, typename data_type = value_type, template < class ... T> class container_type>
+    static bool IsContain( value_type&& value, const container_type<data_type>& container,
+                            std::function<bool(value_type,data_type)> funcComp
+                            )
+    {
+        for( auto& item : container )
+        {
+            if( funcComp(value,item ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    template <  typename data_type , template < class ... T> class container_type>
+    static bool IsContain( const container_type<data_type>& container,
+                            std::function<bool(data_type)> funcComp
+                            )
+    {
+        for( auto item : container )
+        {
+            if( funcComp( item ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // åˆ¤æ–­å®¹å™¨ä¸­æ˜¯å¦å­˜åœ¨æŒ‡å®šçš„å€¼ï¼Œä¸º é‡è½½äº†==æ“ä½œç¬¦çš„ç±»å‹æä¾›
+//    template <typename value_type, typename data_type = value_type, template < class ... T> class container_type>
+//    static bool IsContain( value_type&& value, const container_type<data_type>& container)
+//    {
+//        for( auto& item : container )
+//        {
+//            if( item == value )
+//            {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+    template <typename value_type, typename data_type = value_type, template < class ... T> class container_type>
+    static bool IsContain( value_type value, const container_type<data_type>& container)
+    {
+        for( auto& item : container )
+        {
+            if( item == value )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    // åœ¨ä¸€ä¸ªå®¹å™¨é‡ŒæŸ¥æ‰¾ç¬¦åˆæ¡ä»¶çš„ç¬¬ä¸€æ¡æ•°æ®
+    template<typename data_type, template < class ... T> class container_type,
+            typename std::enable_if<std::is_pointer<data_type>::value>::type* = nullptr >
+    static data_type find( container_type<data_type>& container,
+                                                      std::function<bool(data_type&)> funcComp )
+    {
+        auto item = std::find_if(container.begin(), container.end(), funcComp );
+        if( item == container.end() )
+        {
+            return nullptr;
+        }
+        return *item;
+    }
+
+    template<typename data_type, template < class ... T> class container_type,
+            typename std::enable_if<!std::is_pointer<data_type>::value>::type* = nullptr >
+    static data_type find( container_type<data_type>& container,
+                                                      std::function<bool(data_type&)> funcComp )
+    {
+        auto item = std::find_if(container.begin(), container.end(), funcComp );
+        if( item == container.end() )
+        {
+            return data_type();
+        }
+        return *item;
+    }
+
+
+    // ä½¿ç”¨é»˜è®¤æ¯”è¾ƒè¿ç®—ç¬¦è¿›è¡Œæ¯”è¾ƒçš„å‡½æ•°
+    template<typename l_type, typename r_type >
+    static bool is_same( l_type&& l ,r_type&& r )
+    {
+        return l == r;
+    }
+
+    // åˆ¤æ–­ä¸€ä¸ªæ•°æ®ï¼Œæ˜¯å¦ä¸ºåé¢çš„å˜å‚ä¹‹ä¸­çš„ä¸€ä¸ª
+    template<typename value_type, class ... arg_types >
+    static bool is_one_of ( value_type value, arg_types... arg )
+    {
+        // ä¾æ¬¡åˆ¤æ–­æ•°å€¼æ˜¯å¦ä¸ºæ‰€æœ‰å˜å‚ä¸­çš„ä¸€ä¸ª
+        auto lst = {is_same(value, std::forward<arg_types>(arg))...};
+        // å¦‚æœæ‰€æœ‰çš„ç»“æœä¸­æœ‰trueï¼Œé‚£å°±æ„å‘³ç€æ˜¯æ‰¾åˆ°äº†ï¼Œå¦åˆ™å°±æ˜¯æ²¡æ‰¾åˆ°
+        return IsContain<bool>(true,lst);
+    }
+
+
 private:
 
 };
 
 
-#endif //__COMMON_STRING_HPP__
+using Algo = CCommonAlgorithm;
+
+#endif //COMMON_STRING_HPP
